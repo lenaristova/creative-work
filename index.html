@@ -363,6 +363,73 @@
     color: var(--text-subtle);
   }
 
+  /* ─── VIDEO MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-content {
+    position: relative;
+    width: 90vw;
+    max-width: 400px;
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: default;
+    animation: modalIn 0.3s ease-out;
+  }
+
+  .modal-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  @keyframes modalIn {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   /* ─── ANIMATIONS ─── */
   @keyframes fadeUp {
     from {
@@ -436,49 +503,49 @@
     -->
 
     <!-- CARD 1 — BeKynd Scalp Monster -->
-    <a href="https://drive.google.com/file/d/10lGouWrETPmPqgCmMnhlr1CWN7xiCrDw/view?usp=sharing" target="_blank" class="card" style="text-decoration:none;">
+    <div class="card" onclick="openVideo('10lGouWrETPmPqgCmMnhlr1CWN7xiCrDw')">
       <img class="thumbnail" src="bekynd-scalp.png" alt="BeKynd Scalp Ad" />
       <div class="overlay"></div>
       <div class="play-btn">
         <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-    </a>
+    </div>
 
     <!-- CARD 2 — Wuffes Dog Podcast -->
-    <a href="https://drive.google.com/file/d/1yFhfwmDAW5IeORh-QY118V7MWd97NZS7/view?usp=sharing" target="_blank" class="card" style="text-decoration:none;">
+    <div class="card" onclick="openVideo('1yFhfwmDAW5IeORh-QY118V7MWd97NZS7')">
       <img class="thumbnail" src="wuffes-podcast.png" alt="Wuffes Podcast Ad" />
       <div class="overlay"></div>
       <div class="play-btn">
         <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-    </a>
+    </div>
 
     <!-- CARD 3 — Wuffes Luna Supplements -->
-    <a href="https://drive.google.com/file/d/1S93CCNM19CoCHrH-opV8-_ZoA_W-B3P0/view?usp=sharing" target="_blank" class="card" style="text-decoration:none;">
+    <div class="card" onclick="openVideo('1S93CCNM19CoCHrH-opV8-_ZoA_W-B3P0')">
       <img class="thumbnail" src="wuffes-luna.png" alt="Wuffes Luna Ad" />
       <div class="overlay"></div>
       <div class="play-btn">
         <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-    </a>
+    </div>
 
     <!-- CARD 4 — Gummies -->
-    <a href="https://drive.google.com/file/d/1Om0KjcpWdUQE3Lc4aswcduUkPAkWe7L4/view?usp=sharing" target="_blank" class="card" style="text-decoration:none;">
+    <div class="card" onclick="openVideo('1Om0KjcpWdUQE3Lc4aswcduUkPAkWe7L4')">
       <img class="thumbnail" src="gummies.png" alt="Gummies Ad" />
       <div class="overlay"></div>
       <div class="play-btn">
         <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-    </a>
+    </div>
 
     <!-- CARD 5 — HerPlus BV Carriers -->
-    <a href="https://drive.google.com/file/d/1jiw7W6l1f6_N4eNjfbhc0YoHfoOWyWVK/view?usp=sharing" target="_blank" class="card" style="text-decoration:none;">
+    <div class="card" onclick="openVideo('1jiw7W6l1f6_N4eNjfbhc0YoHfoOWyWVK')">
       <img class="thumbnail" src="herplus-bv.png" alt="HerPlus BV Ad" />
       <div class="overlay"></div>
       <div class="play-btn">
         <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-    </a>
+    </div>
 
     <!-- CARD 6 — COMING SOON (swap in your video later) -->
     <div class="card" style="pointer-events:none; opacity: 0.45;">
@@ -504,6 +571,44 @@
   </div>
 
 </div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal" onclick="closeVideo(event)">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeVideo(event)">✕</button>
+    <iframe id="videoFrame" src="" allow="autoplay" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+  function openVideo(fileId) {
+    const modal = document.getElementById('videoModal');
+    const frame = document.getElementById('videoFrame');
+    frame.src = 'https://drive.google.com/file/d/' + fileId + '/preview';
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideo(e) {
+    if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('modal-close')) {
+      const modal = document.getElementById('videoModal');
+      const frame = document.getElementById('videoFrame');
+      frame.src = '';
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('videoModal');
+      const frame = document.getElementById('videoFrame');
+      frame.src = '';
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
 
 </body>
 </html>
